@@ -2,7 +2,7 @@
   {
     "id": 1,
     "description": "Complete project",
-    "status": "pending",
+    "status": "done",
     "createdAt": "2024-09-27T04:53:03.744Z"
   },
   {
@@ -16,12 +16,6 @@
     "description": "Jumma",
     "status": "pending",
     "createdAt": "2024-09-27T04:58:49.232Z"
-  },
-  {
-    "id": 4,
-    "description": "24",
-    "status": "pending",
-    "createdAt": "2024-09-27T04:59:18.666Z"
   },
   {
     "id": 5,

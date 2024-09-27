@@ -2,9 +2,7 @@
 const { program } = require('commander');
 const fs = require('fs');
 
-console.log(__dirname);
-
-const filePath = '/home/mmmim24/workspace/task-cli/tasks.json';
+const filePath = `${__dirname}/tasks.json`;
 
 // Helper functions to load and save tasks
 const loadTasks = () => {
@@ -14,6 +12,12 @@ const loadTasks = () => {
 const saveTasks = (tasks) => {
     fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2));
 };
+
+const deleteTask = (id) => {
+    const tasks = loadTasks();
+    const newTasks = tasks.filter(t => t.id !== id);
+    saveTasks(newTasks);
+}
 
 // Command to add a new task
 program
@@ -30,6 +34,15 @@ program
         tasks.push(newTask);
         saveTasks(tasks);
         console.log('Task added:', newTask);
+    });
+
+// Command to delete a task
+program
+    .command('delete <id>')
+    .description('Delete a task')
+    .action((id) => {
+        deleteTask(parseInt(id));
+        console.log('Task deleted');
     });
 
 // Command to list tasks
