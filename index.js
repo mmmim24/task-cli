@@ -19,29 +19,63 @@ const deleteTask = (id) => {
     saveTasks(newTasks);
 }
 
+const updateTask = (id, description) => {
+    const tasks = loadTasks();
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.description = description;
+        task.lastUpdatedAt = new Date().toLocaleString();
+        saveTasks(tasks);
+    }
+}
+
+const updateTaskStatus = (id, status) => {
+    const tasks = loadTasks();
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.status = status;
+        task.lastUpdatedAt = new Date().toLocaleString();
+        saveTasks(tasks);
+        return `status updated to ${status}`;
+    }else{
+        return 'task not found';
+    }
+}
+
 // Command to add a new task
 program
     .command('add <description>')
     .description('Add a new task')
     .action((description) => {
         const tasks = loadTasks();
+        const lastTask = tasks[tasks.length - 1];
         const newTask = {
-            id: tasks.length + 1,
+            id: lastTask ? lastTask.id + 1 : 1,
             description,
-            status: 'pending',
-            createdAt: new Date().toISOString(),
+            status: 'started',
+            createdAt: new Date().toLocaleString(),
+            lastUpdatedAt: new Date().toLocaleString(),
         };
         tasks.push(newTask);
         saveTasks(tasks);
         console.log('Task added:', newTask);
     });
 
-// Command to delete a task
+// Command to update a task
+program
+    .command('update <id> <description>')
+    .description('Update a task')
+    .action((id, description) => {
+        updateTask(parseInt(id), description);
+        console.log('Task updated');
+    });
+
+// Command to delete a task or all tasks
 program
     .command('delete <id>')
-    .description('Delete a task')
+    .description('Delete task id to delete one or all to delete all tasks')
     .action((id) => {
-        deleteTask(parseInt(id));
+        id === 'all' ? saveTasks([]) : deleteTask(parseInt(id));
         console.log('Task deleted');
     });
 
@@ -55,20 +89,13 @@ program
         console.log(filteredTasks);
     });
 
-// Command to mark task as done
+// Command to update task status
 program
-    .command('done <id>')
+    .command('mark <id> <status>')
     .description('Mark task as done')
-    .action((id) => {
-        const tasks = loadTasks();
-        const task = tasks.find(t => t.id === parseInt(id));
-        if (task) {
-            task.status = 'done';
-            saveTasks(tasks);
-            console.log('Task marked as done:', task);
-        } else {
-            console.log('Task not found');
-        }
+    .action((id,status) => {
+        const log = updateTaskStatus(parseInt(id), status);
+        console.log(log);
     });
 
 program.parse(process.argv);
