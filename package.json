@@ -1,0 +1,25 @@
+{
+  "name": "task-cli",
+  "version": "1.0.0",
+  "description": "command line todo ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmmim24/task-cli.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "mmmim24",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmmim24/task-cli/issues"
+  },
+  "homepage": "https://github.com/mmmim24/task-cli#readme",
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}
