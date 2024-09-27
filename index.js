@@ -14,9 +14,15 @@ const saveTasks = (tasks) => {
 };
 
 const deleteTask = (id) => {
-    const tasks = loadTasks();
-    const newTasks = tasks.filter(t => t.id !== id);
-    saveTasks(newTasks);
+    if(id === 'all'){
+        saveTasks([]);
+        return "All tasks deleted";
+    }else{
+        const tasks = loadTasks();
+        const newTasks = tasks.filter(t => t.id !== parseInt(id));
+        saveTasks(newTasks);
+        return `Task with id : ${id} deleted`;
+    }
 }
 
 const updateTask = (id, description) => {
@@ -24,8 +30,12 @@ const updateTask = (id, description) => {
     const task = tasks.find(t => t.id === id);
     if (task) {
         task.description = description;
-        task.lastUpdatedAt = new Date().toLocaleString();
+        task.updatedAt = new Date().toLocaleString();
         saveTasks(tasks);
+        return `Task updated with id : ${id}`;
+    }
+    else{
+        return 'Task not found';
     }
 }
 
@@ -34,11 +44,11 @@ const updateTaskStatus = (id, status) => {
     const task = tasks.find(t => t.id === id);
     if (task) {
         task.status = status;
-        task.lastUpdatedAt = new Date().toLocaleString();
+        task.updatedAt = new Date().toLocaleString();
         saveTasks(tasks);
-        return `status updated to ${status}`;
+        return `Task id with ${id} status updated to ${status}`;
     }else{
-        return 'task not found';
+        return 'Task not found';
     }
 }
 
@@ -54,11 +64,11 @@ program
             description,
             status: 'started',
             createdAt: new Date().toLocaleString(),
-            lastUpdatedAt: new Date().toLocaleString(),
+            updatedAt: new Date().toLocaleString(),
         };
         tasks.push(newTask);
         saveTasks(tasks);
-        console.log('Task added:', newTask);
+        console.log(`Task added with id : ${newTask.id}`, newTask);
     });
 
 // Command to update a task
@@ -66,17 +76,17 @@ program
     .command('update <id> <description>')
     .description('Update a task')
     .action((id, description) => {
-        updateTask(parseInt(id), description);
-        console.log('Task updated');
+        const log = updateTask(parseInt(id), description);
+        console.log(log);
     });
 
 // Command to delete a task or all tasks
 program
     .command('delete <id>')
-    .description('Delete task id to delete one or all to delete all tasks')
+    .description('Put $id to delete one or "all" to delete all tasks')
     .action((id) => {
-        id === 'all' ? saveTasks([]) : deleteTask(parseInt(id));
-        console.log('Task deleted');
+        log = deleteTask(id);
+        console.log(log);
     });
 
 // Command to list tasks
@@ -92,7 +102,7 @@ program
 // Command to update task status
 program
     .command('mark <id> <status>')
-    .description('Mark task as done')
+    .description('Mark task status')
     .action((id,status) => {
         const log = updateTaskStatus(parseInt(id), status);
         console.log(log);
